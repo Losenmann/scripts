@@ -5,5 +5,7 @@
 		:if ($varArch = "x86") do={tool fetch "https://download.mikrotik.com/routeros/$varVers/multicast-$varVers.npk"} \
 			else={tool fetch "https://download.mikrotik.com/routeros/$varVers/multicast-$varVers-$varArch.npk"};
 		system scheduler add name="Run IPTV Install" on-event="import iptv8.rsc" policy=reboot,read,write start-time=startup;
+		:delay 3000ms;
+		system reboot;
 	}
 }
