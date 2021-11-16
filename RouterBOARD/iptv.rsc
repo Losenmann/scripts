@@ -1,3 +1,4 @@
 :global funcIptv do={
-	:if ([/system package find name=multicast] = "") do={:put ok}
+	:local varTest value=[system package find name=multicast];
+	:if ($varTest = "") do={:put ok}
 }
