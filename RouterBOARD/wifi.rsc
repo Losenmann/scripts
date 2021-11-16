@@ -8,4 +8,4 @@
 			frequency-mode=manual-txpower country=no_country_set installation=indoor wmm-support=enabled bridge-mode=enabled \
 			multicast-helper=full tx-power-mode=all-rates-fixed disabled=no};
 	}
-}
+/}
