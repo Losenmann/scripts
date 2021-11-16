@@ -14,5 +14,4 @@
 		:if ([find chain="forward" protocol="udp" dst-port="1234"] = "") do={
 			add chain="forward" protocol="udp" dst-port="1234" action="accept" place-before="2" comment="IPTV Forward"};
 	}
-	/
-}
+/}
