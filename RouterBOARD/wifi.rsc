@@ -1,6 +1,7 @@
 :global funcWifi do={
 	/interface{
 		/wireless{
+			security-profiles set numbers=0 mode=dynamic-keys authentication-types=wpa2-psk unicast-ciphers=aes-ccm group-ciphers=aes-ccm wpa2-pre-shared-key=$vPsk
 			:foreach i in=[find (type="wlan")] do={reset-configuration numbers=$i};
 			:foreach i in=[find (band~"5ghz")] do={set number=$i band=5ghz-onlyac channel-width=20/40/80mhz-XXXX ssid=$vSsid2};
 			:foreach i in=[find (band~"2ghz")] do={set number=$i band=2ghz-b/g/n channel-width=20/40mhz-XX ssid=$vSsid5};
