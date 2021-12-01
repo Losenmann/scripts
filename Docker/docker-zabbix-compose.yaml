@@ -1,29 +1,35 @@
 version: '3.1'
 networks:
-  network-zabbix:
-    driver: bridge
+    bridge:
+        driver: bridge
 
 services:
     mysql:
         container_name: MariaDB
         image: mariadb:latest
-        networks: network-zabbix
-        ports: '3306:3306'
-        restart: always
-        volumes: './zabbix/mysql:/var/lib/mysql'
+        networks:
+            - network-zabbix
+        ports:
+            - '3306:3306'
+        volumes:
+            - './zabbix/mysql:/var/lib/mysql'
         environment:
             - MYSQL_ROOT_PASSWORD=YOUR-PASSWORD
             - MYSQL_DATABASE=zabbix
             - MYSQL_USER=zabbix
             - MYSQL_PASSWORD=YOUR-PASSWORD
         command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_bin']
+        restart: always
 
     zabbix-server:
         container_name: Zabbix-Server
         image: zabbix/zabbix-server-mysql:latest
-        networks: network-zabbix
-        ports: '10051:10051'
-        volumes: './zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
+        networks:
+            - network-zabbix
+        ports:
+            - '10051:10051'
+        volumes:
+            - './zabbix/alertscripts:/usr/lib/zabbix/alertscripts'
         environment:
             - DB_SERVER_HOST=mysql
             - MYSQL_DATABASE=zabbix
@@ -36,8 +42,10 @@ services:
     zabbix-frontend:
         container_name: Zabbix-Frontend
         image: zabbix/zabbix-web-nginx-mysql:latest
-        networks: network-zabbix
-        ports: '8080:8080'
+        networks:
+            - network-zabbix
+        ports:
+            - '8080:8080'
         environment:
             - DB_SERVER_HOST=mysql
             - MYSQL_DATABASE=zabbix
@@ -52,9 +60,12 @@ services:
     zabbix-agent:
         container_name: Zabbix-Agent
         image: zabbix/zabbix-agent2:latest
-        networks: network-zabbix
-        ports: '10050:10050'
-        volumes: '/var/run:/var/run'
+        networks:
+            - network-zabbix
+        ports:
+            - '10050:10050'
+        volumes:
+            - '/var/run:/var/run'
         user: root
         privileged: true
         environment:
