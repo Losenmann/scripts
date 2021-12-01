@@ -1,6 +1,6 @@
 version: '3.1'
 networks:
-    bridge:
+    network-zabbix:
         driver: bridge
 
 services:
@@ -35,9 +35,11 @@ services:
             - MYSQL_DATABASE=zabbix
             - MYSQL_USER=zabbix
             - MYSQL_PASSWORD=YOUR-PASSWORD
+        links:
+            - mysql
+        depends_on:
+            - mysql
         restart: always
-        links: mysql
-        depends_on: mysql
 
     zabbix-frontend:
         container_name: Zabbix-Frontend
@@ -53,9 +55,11 @@ services:
             - MYSQL_PASSWORD=YOUR-PASSWORD
             - PHP_TZ=Asia/Krasnoyarsk
             - ZBX_SERVER_NAME=RPi2
+        links:
+            - mysql
+        depends_on:
+            - mysql
         restart: always
-        links: mysql
-        depends_on: mysql
 
     zabbix-agent:
         container_name: Zabbix-Agent
@@ -71,5 +75,6 @@ services:
         environment:
             - ZBX_HOSTNAME=zabbix-server
             - ZBX_SERVER_HOST=zabbix-server
+        links:
+            - zabbix-server
         restart: always
-        links: zabbix-server
