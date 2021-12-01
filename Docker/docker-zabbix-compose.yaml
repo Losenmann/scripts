@@ -1,14 +1,9 @@
 version: '3.1'
-networks:
-    network-zabbix:
-        driver: bridge
-
 services:
     mysql:
         container_name: MariaDB
         image: mariadb:latest
-        networks:
-            - network-zabbix
+        network_mode: bridge
         ports:
             - '3306:3306'
         volumes:
@@ -24,8 +19,7 @@ services:
     zabbix-server:
         container_name: Zabbix-Server
         image: zabbix/zabbix-server-mysql:latest
-        networks:
-            - network-zabbix
+        network_mode: bridge
         ports:
             - '10051:10051'
         volumes:
@@ -44,8 +38,7 @@ services:
     zabbix-frontend:
         container_name: Zabbix-Frontend
         image: zabbix/zabbix-web-nginx-mysql:latest
-        networks:
-            - network-zabbix
+        network_mode: bridge
         ports:
             - '8080:8080'
         environment:
@@ -54,7 +47,7 @@ services:
             MYSQL_USER: zabbix
             MYSQL_PASSWORD: YOUR-PASSWORD
             PHP_TZ: Asia/Krasnoyarsk
-            ZBX_SERVER_NAME: RPi2
+            ZBX_SERVER_NAME: Zabbix Docker
         links:
             - mysql
         depends_on:
@@ -64,8 +57,7 @@ services:
     zabbix-agent:
         container_name: Zabbix-Agent
         image: zabbix/zabbix-agent2:latest
-        networks:
-            - network-zabbix
+        network_mode: bridge
         ports:
             - '10050:10050'
         volumes:
