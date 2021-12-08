@@ -23,7 +23,7 @@
 		bridge set $vInterBr igmp-snooping="yes";
 		:foreach i in=[find (type="wlan")] do={wireless set $i wmm-support="enabled" bridge-mode="enabled" multicast-helper="full"};
 		/ip firewall filter
-		add chain=input comment="ADD_TEMP"
+		add chain=input comment="ADD_TEMP";
 		print; :if ([find chain="input" protocol="igmp" in-interface=$vInterBr] = "") do={
 			:if ([get number=0 action] = "passthrough") do={
 				add chain="input" in-interface=$vInterBr protocol="igmp" action="accept" place-before=1 comment="IGMP Allow"} \
