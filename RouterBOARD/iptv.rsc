@@ -20,7 +20,7 @@
 		interface add interface=$vInterWan alternative-subnets="0.0.0.0/0" upstream="yes";
 		interface add interface=$vInterBr;
 		/interface
-		bridge set [/ip dhcp-server get 0 interface] igmp-snooping="yes";
+		bridge set $vInterBr igmp-snooping="yes";
 		:foreach i in=[find (type="wlan")] do={wireless set $i wmm-support="enabled" bridge-mode="enabled" multicast-helper="full"};
 		/ip firewall filter
 		:if ([find chain="input" protocol="igmp" in-interface=$vInterBr] = "") do={
