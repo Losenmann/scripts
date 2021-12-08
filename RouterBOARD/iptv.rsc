@@ -10,8 +10,12 @@
 		:delay 3000ms;
 		system reboot;
 	} else={
-	    set $vInterWan value=[ip route get number=[find dst-address=0.0.0.0/0] vrf-interface];
-		set $vInterBr value=[ip route get number=[find dst-address=0.0.0.0/0] vrf-interface];
+		set $vInterWan value=[ip route get number=[find dst-address=0.0.0.0/0] vrf-interface];
+		{:local br1; :local br2; :local br3; :foreach i in=[/interface find type="bridge"] do={
+			:set $br3 value=$i;
+			:set br1 value=[port print count-only where bridge=[/interface get $br3 value-name=name]];
+			[($br1 >= $br2)] && [:set $br2 value=$br1;
+			:set $vInterBr value=[/interface get $br3 value-name=name]]}};
 		/routing igmp-proxy
 		interface add interface=$vInterWan alternative-subnets="0.0.0.0/0" upstream="yes";
 		interface add interface=$vInterBr;
@@ -21,10 +25,10 @@
 		/ip firewall filter
 		:if ([find chain="input" protocol="igmp" in-interface=$vInterBr] = "") do={
 			:if ([get number=0 action] = "passthrough") do={
-				add chain="input" in-interface=[/ip dhcp-server get 0 interface] protocol="igmp" action="accept" place-before=1 comment="IGMP Allow"} \
-			else={add chain="input" in-interface=[/ip dhcp-server get 0 interface] protocol="igmp" action="accept" place-before=0 comment="IGMP Allow"}};
+				add chain="input" in-interface=$vInterBr protocol="igmp" action="accept" place-before=1 comment="IGMP Allow"} \
+			else={add chain="input" in-interface=$vInterBr protocol="igmp" action="accept" place-before=0 comment="IGMP Allow"}};
 		:if ([find chain="forward" protocol="udp" dst-port="1234"] = "") do={
-			add chain="forward" protocol="udp" dst-port="1234" action="accept" place-before="2" comment="IPTV Forward"};
+			add chain="forward" protocol="udp" dst-port="1234" action="accept" place-before=1 comment="IPTV Forward"};
 		system scheduler remove "Run IPTV Install";
 	}
 /}
