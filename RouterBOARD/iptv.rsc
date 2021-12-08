@@ -23,12 +23,14 @@
 		bridge set $vInterBr igmp-snooping="yes";
 		:foreach i in=[find (type="wlan")] do={wireless set $i wmm-support="enabled" bridge-mode="enabled" multicast-helper="full"};
 		/ip firewall filter
-		:if ([find chain="input" protocol="igmp" in-interface=$vInterBr] = "") do={
+		add chain=input comment="ADD_TEMP"
+		print; :if ([find chain="input" protocol="igmp" in-interface=$vInterBr] = "") do={
 			:if ([get number=0 action] = "passthrough") do={
 				add chain="input" in-interface=$vInterBr protocol="igmp" action="accept" place-before=1 comment="IGMP Allow"} \
 			else={add chain="input" in-interface=$vInterBr protocol="igmp" action="accept" place-before=0 comment="IGMP Allow"}};
-		:if ([find chain="forward" protocol="udp" dst-port="1234"] = "") do={
+		print; :if ([find chain="forward" protocol="udp" dst-port="1234"] = "") do={
 			add chain="forward" protocol="udp" dst-port="1234" action="accept" place-before=1 comment="IPTV Forward"};
+		remove numbers=[find comment="ADD_TEMP"];
 		system scheduler remove "Run IPTV Install";
 	}
 /}
