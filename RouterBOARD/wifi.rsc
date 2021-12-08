@@ -8,6 +8,6 @@
 		}
 			:foreach i in=[find (type="wlan")] do={set mode=ap-bridge wireless-protocol=802.11 security-profile=default \
 			frequency-mode=manual-txpower country=no_country_set installation=indoor wmm-support=enabled bridge-mode=enabled \
-			multicast-helper=full tx-power-mode=all-rates-fixed tx-power=23 disabled=no};
+			multicast-helper=full tx-power-mode=all-rates-fixed tx-power=17 disabled=no};
 	}
 /}
