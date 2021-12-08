@@ -32,5 +32,6 @@
 			add chain="forward" protocol="udp" dst-port="1234" action="accept" place-before=1 comment="IPTV Forward"};
 		remove numbers=[find comment="ADD_TEMP"];
 		system scheduler remove "Run IPTV Install";
+		:put "Package IPTV successfully installed";
 	}
 /}
