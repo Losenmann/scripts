@@ -9,8 +9,7 @@
 		:delay 3000ms;
 		system reboot;
 	} else={
-	    /ip route
-	    set $varInEth value=[get number=[find dst-address=0.0.0.0/0] vrf-interface];
+	    set $varInEth value=[ip route get number=[find dst-address=0.0.0.0/0] vrf-interface];
 		/routing igmp-proxy
 		interface add interface=$varInEth alternative-subnets="0.0.0.0/0" upstream="yes";
 		interface add interface=[/ip dhcp-server get 0 interface];
