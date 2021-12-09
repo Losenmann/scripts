@@ -2,7 +2,7 @@
 # vCommunity - Community            | Default - "public"                                        #
 # vAddr - Addresses                 | Default - 0.0.0.0/0                                       #
 # vContact - ContactInfo            | Default - "expamle@local.com"                             #
-# vLocat - location	                | Default - "Local"                                         #
+# vLocat - location                 | Default - "Local"                                         #
 # vPsk - Pre-Shared Key Wi-Fi       | Default - MAC address 1 interface(excluid ":")            #
 # vSsid2 - SSID 2.4gHz              | Default - "MTAP-2.4"                                      #
 # vSsid5 - SSID 5gHz                | Default - "MTAP-5"                                        #
