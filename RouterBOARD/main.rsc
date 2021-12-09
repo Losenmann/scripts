@@ -1,10 +1,10 @@
-#===============================================================================================#
+#============================================EXAMPLE============================================#
 # $funcExpamle vExample="1244" "4321"                                                           #
-#===============================================================================================#
+#===========================================FUNCTIONS===========================================#
 # $funcWifi vPsk="" vSsid2="" vSsid5=""                                                         #
 # $funcIptv                                                                                     #
 # $funcSnmp vCommunity="" vAddr="" vContact="" vLocat=""                                        #
-#===============================================================================================# 
+#===========================================VARIABLES===========================================# 
 # vCommunity - Community            | Default - "public"                                        #
 # vAddr - Addresses                 | Default - 0.0.0.0/0                                       #
 # vContact - ContactInfo            | Default - "expamle@local.com"                             #
@@ -12,6 +12,8 @@
 # vPsk - Pre-Shared Key Wi-Fi       | Default - MAC address 1 interface(excluid ":")            #
 # vSsid2 - SSID 2.4gHz              | Default - "MTAP-2.4"                                      #
 # vSsid5 - SSID 5gHz                | Default - "MTAP-5"                                        #
+#===========================================ERROR CODE==========================================#
+# Err-02 - No bridges created, create at least 1 bridge                                         #
 #===============================================================================================#
 
 
@@ -43,7 +45,7 @@
 	:if ([:len $vContact] = 0) do={:set $vContact value="expamle@local.com"};
 	:if ([:len $vLocat] = 0) do={:set $vLocat value="Local"};
 	{:local ibp1 value=0; :local ibp2 value=0;
-		:foreach i in=[/interface find type="bridge"] do={
+		:foreach i in=[[/interface find type="bridge"] || [:error "Err-02: No bridges created"]] do={
 			:set ibp1 value=[/interface bridge port print count-only where bridge=[/interface get $i value-name=name]];
 			:if ($ibp1 > $ibp2) do={:set $ibp2 value=$ibp1; :set $vInterBr value=[/interface get $i value-name=name]}}};
 	/certificate
@@ -78,7 +80,7 @@
 	} else={
 		set $vInterWan value=[ip route get number=[find dst-address=0.0.0.0/0] vrf-interface];
 		{:local ibp1 value=0; :local ibp2 value=0;
-		:foreach i in=[/interface find type="bridge"] do={
+		:foreach i in=[[/interface find type="bridge"] || [:error "Err-02: No bridges created"]] do={
 			:set ibp1 value=[/interface bridge port print count-only where bridge=[/interface get $i value-name=name]];
 			:if ($ibp1 > $ibp2) do={:set $ibp2 value=$ibp1; :set $vInterBr value=[/interface get $i value-name=name]}}};
 		/routing igmp-proxy
