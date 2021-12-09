@@ -14,6 +14,7 @@
 # vSsid5 - SSID 5gHz                | Default - "MTAP-5"                                        #
 #===========================================ERROR CODE==========================================#
 # Err-02 - No bridges created, create at least 1 bridge                                         #
+# Err-03 - No external connection, create at least 1 DHCP/PPPoE/L2TP connection                 #
 #===============================================================================================#
 
 
@@ -78,7 +79,7 @@
 		:delay 3000ms;
 		system reboot;
 	} else={
-		set $vInterWan value=[ip route get number=[find dst-address=0.0.0.0/0] vrf-interface];
+		set $vInterWan value=[ip route get number=[[find dst-address=0.0.0.0/0] || [:error "Err-03: No WAN interfaces"]] vrf-interface];
 		{:local ibp1 value=0; :local ibp2 value=0;
 		:foreach i in=[[/interface find type="bridge"] || [:error "Err-02: No bridges created"]] do={
 			:set ibp1 value=[/interface bridge port print count-only where bridge=[/interface get $i value-name=name]];
