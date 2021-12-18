@@ -15,6 +15,7 @@
 #===========================================ERROR CODE==========================================#
 # Err-02 - No bridges created, create at least 1 bridge                                         #
 # Err-03 - No external connection, create at least 1 DHCP/PPPoE/L2TP connection                 #
+# Err-04 - Operation mode not selected or incorrectly selected
 #===============================================================================================#
 
 
