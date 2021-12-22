@@ -4,50 +4,50 @@ volumes:
 services:
     minecraft-srv01:
     	container_name: "Minecraft-Universal"
-		image: itzg/minecraft-server:java8-multiarch
-		network_mode: bridge
-		ports:
-			- "25565:25565"
-		stdin_open: true
-		tty: true
-		restart: always
-		volumes:
-			- 1.12.2_Universal:/data
-			- ./plugins:/plugins:ro
-		environment:
-			# +++++++++ Main ++++++++
-			EULA: 'true'
-			CONSOLE: 'true'
-			# ICON: '...'
-			# VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA, FABRIC
-			TYPE: FORGE
-			VERSION: 1.12.2
-			MEMORY: 4G
-			SERVER_NAME: 127.0.0.1
-			MOTD: "Minecraft in docker"
-			# ++++++++ World ++++++++
-			LEVEL: world
-			LEVEL_TYPE: DEFAULT
-			MODE: survival
-			DIFFICULTY: normal
-			MAX_WORLD_SIZE: 10000
-			MAX_BUILD_HEIGHT: 256
-			# SEED: '...'
-			PVP: 'true'
-			HARDCORE: 'false'
-			# ++++++++ Spawn ++++++++
-			SPAWN_ANIMALS: 'true'
-			SPAWN_MONSTERS: 'true'
-			SPAWN_NPCS: 'true'
-			SPAWN_PROTECTION: 32
-			# ++++++++ Global +++++++
-			VIEW_DISTANCE: 10
-			MAX_PLAYERS: 10
-			ONLINE_MODE: 'false'
-			ENABLE_COMMAND_BLOCK: 'true'
-			ALLOW_FLIGHT: 'false'
-			FORCE_GAMEMODE: 'false'
-			# ++++++++ Other ++++++++
-			ANNOUNCE_PLAYER_ACHIEVEMENTS: 'true'
-			SNOOPER_ENABLED: 'false'
-			EXEC_DIRECTLY: 'true'
+        image: itzg/minecraft-server:java8-multiarch
+        network_mode: bridge
+        ports:
+            - "25565:25565"
+        stdin_open: true
+        tty: true
+        restart: always
+        volumes:
+            - 1.12.2_Universal:/data
+            - ./plugins:/plugins:ro
+        environment:
+            # +++++++++ Main ++++++++
+            EULA: 'true'
+            CONSOLE: 'true'
+            # ICON: '...'
+            # VANILLA, FORGE, BUKKIT, SPIGOT, PAPER, CURSEFORGE, SPONGEVANILLA, FABRIC
+            TYPE: FORGE
+            VERSION: 1.12.2
+            MEMORY: 4G
+            SERVER_NAME: 127.0.0.1
+            MOTD: "Minecraft in docker"
+            # ++++++++ World ++++++++
+            LEVEL: world
+            LEVEL_TYPE: DEFAULT
+            MODE: survival
+            DIFFICULTY: normal
+            MAX_WORLD_SIZE: 10000
+            MAX_BUILD_HEIGHT: 256
+            # SEED: '...'
+            PVP: 'true'
+            HARDCORE: 'false'
+            # ++++++++ Spawn ++++++++
+            SPAWN_ANIMALS: 'true'
+            SPAWN_MONSTERS: 'true'
+            SPAWN_NPCS: 'true'
+            SPAWN_PROTECTION: 32
+            # ++++++++ Global +++++++
+            VIEW_DISTANCE: 10
+            MAX_PLAYERS: 10
+            ONLINE_MODE: 'false'
+            ENABLE_COMMAND_BLOCK: 'true'
+            ALLOW_FLIGHT: 'false'
+            FORCE_GAMEMODE: 'false'
+            # ++++++++ Other ++++++++
+            ANNOUNCE_PLAYER_ACHIEVEMENTS: 'true'
+            SNOOPER_ENABLED: 'false'
+            EXEC_DIRECTLY: 'true'
