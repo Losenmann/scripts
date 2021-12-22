@@ -3,7 +3,7 @@ volumes:
 
 services:
     minecraft-srv01:
-    	container_name: "Minecraft-Universal"
+        container_name: "Minecraft-Universal"
         image: itzg/minecraft-server:java8-multiarch
         network_mode: bridge
         ports:
