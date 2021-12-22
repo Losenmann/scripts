@@ -7,7 +7,7 @@ networks:
                     - subnet: 172.18.0.0/29
 services:
     mysql-server:
-        container_name: mysql-server
+        container_name: "MariaDB"
         image: mariadb:latest
         #network_mode: bridge
         networks:
@@ -19,19 +19,19 @@ services:
             MYSQL_ROOT_PASSWORD: "root_pwd"
             MYSQL_DATABASE: "zabbix"
             MYSQL_USER: "zabbix"
-            MYSQL_PASSWORD: "zabbix_pwd"
+            MYSQL_PASSWORD: "zabb_pwd"
         command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_bin']
         restart: always
         healthcheck:
             #test: ["CMD-SHELL", "mysql -uroot -proot_pwd"]
-            test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
-            interval: 10s
-            timeout: 5s
+            test: mysqladmin -proot_pwd ping -h localhost
+            interval: 30s
+            timeout: 10s
             retries: 3
             start_period: 10s
 
     zabbix-server-mysql:
-        container_name: zabbix-server-mysql
+        container_name: "Zabbix-Server"
         image: zabbix/zabbix-server-mysql:latest
         #network_mode: bridge
         networks:
@@ -43,29 +43,29 @@ services:
             DB_SERVER_HOST: mysql-server
             MYSQL_DATABASE: "zabbix"
             MYSQL_USER: "zabbix"
-            MYSQL_PASSWORD: "zabbix_pwd"
+            MYSQL_PASSWORD: "zabb_pwd"
             MYSQL_ROOT_PASSWORD: "root_pwd"
         links:
             - mysql-server
         depends_on:
             mysql-server:
                 condition: service_healthy
-		restart: always
+        restart: always
 
     zabbix-web-nginx-mysql:
-        container_name: zabbix-web-nginx-mysql
+        container_name: "Zabbix-Frontend"
         image: zabbix/zabbix-web-nginx-mysql:latest
         #network_mode: bridge
         networks:
             net:
                 ipv4_address: 172.18.0.5
         ports:
-            - '80:8080'
+            - '8080:8080'
         environment:
             DB_SERVER_HOST: mysql-server
             MYSQL_DATABASE: "zabbix"
             MYSQL_USER: "zabbix"
-            MYSQL_PASSWORD: "zabbix_pwd"
+            MYSQL_PASSWORD: "zabb_pwd"
             MYSQL_ROOT_PASSWORD: "root_pwd"
             PHP_TZ: "Asia/Krasnoyarsk"
             ZBX_SERVER_NAME: "Zabbix Docker"
