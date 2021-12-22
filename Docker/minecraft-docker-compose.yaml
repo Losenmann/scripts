@@ -1,5 +1,5 @@
 volumes:
-  1.12.2_Universal:
+    1.12.2_Universal:
 
 services:
     minecraft-srv01:
