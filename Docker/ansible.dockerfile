@@ -19,4 +19,4 @@ RUN apk add bash nano openssh ansible && mkdir -p /etc/ansible/playbooks && mkdi
         && echo -e '      ansible_private_key_file: /root/.ssh/$vname" >> /etc/ansible/hosts.yaml; done' >> /etc/ansible/conf.sh \
         && echo -e 'cat /etc/ansible/hosts.yaml' >> /etc/ansible/conf.sh \
         && echo -e 'for i in ${aname[@]}; do ssh-keygen -t rsa -m pem -f "/root/.ssh/$i" -q -N ""; done' >> /etc/ansible/conf.sh
-CMD ["/sbin/init"]
+CMD ["/bin/bash"]
