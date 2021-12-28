@@ -9,7 +9,7 @@ RUN apk add bash nano openssh ansible && mkdir -p /etc/ansible/playbooks && mkdi
         && echo -e '#!/bin/bash' > /etc/ansible/conf.sh \
         && echo -e "aname=(${aname})" >> /etc/ansible/conf.sh \
         && echo -e "ahost=(${ahost})" >> /etc/ansible/conf.sh \
-        && echo -e 'echo -e "gw:\n  host:" > /etc/ansible/hosts.yaml' >> /etc/ansible/conf.sh \
+        && echo -e 'echo -e "gw:\n  hosts:" > /etc/ansible/hosts.yaml' >> /etc/ansible/conf.sh \
         && echo -e 'for iname in ${!aname[@]}; do vname=${aname[iname]} \' >> /etc/ansible/conf.sh \
         && echo -e '&& echo -e "    $vname:' >> /etc/ansible/conf.sh \
         && echo -e '      ansible_connection: network_cli' >> /etc/ansible/conf.sh \
