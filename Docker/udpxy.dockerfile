@@ -7,7 +7,7 @@ RUN apk add make gcc libc-dev git python3 py3-setuptools \
 ##### JVT-2-XMLTV #####
         && git clone https://github.com/tataranovich/jtv2xmltv.git \
         && cd jtv2xmltv && python3 setup.py install \
-        && apk del make gcc libc-dev git python3 py3-setuptools
+        && apk del make gcc libc-dev git py3-setuptools python3
 CMD ["/usr/local/bin/udpxy", "-v", "-T", "-p", "4022"]
 
 ######## DEFAULT ########
