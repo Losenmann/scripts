@@ -1,9 +1,13 @@
 FROM alpine:latest
-RUN apk add make gcc libc-dev \
+RUN apk add make gcc libc-dev git python3 py3-setuptools \
+######## UDPXY ########
         && wget http://www.udpxy.com/download/udpxy/udpxy-src.tar.gz \
         && tar zxf udpxy-src.tar.gz \
         && cd udpxy-* && make && make install \
-        && apk del make gcc libc-dev
+##### JVT-2-XMLTV #####
+        && git clone https://github.com/tataranovich/jtv2xmltv.git \
+        && cd jtv2xmltv && python3 setup.py install \
+        && apk del make gcc libc-dev git python3 py3-setuptools
 CMD ["/usr/local/bin/udpxy", "-v", "-T", "-p", "4022"]
 
 ######## DEFAULT ########
