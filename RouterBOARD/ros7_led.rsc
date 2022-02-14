@@ -1,4 +1,4 @@
-/system/script/add source=":global funcLedControl do={
+/system/script/add name="scrLedControl" source={:global funcLedControl do={
 :local t1 "06:00:00";
 :local t2 "23:00:00";
 /system/scheduler/
@@ -10,4 +10,5 @@
 	else={add name=funcLedControlOff interval=24:00:00 start-time=$t2 on-event="\$funcLedControl x=0"};
 :if ($x = 1) do={/system/leds/settings/set all-leds-off="never"} else={/system/leds/settings/set all-leds-off="immediate"}
 };
-:if ([:len $funcLedControl] > 0) do={$funcLedControl};"
+:if ([:len $funcLedControl] > 0) do={$funcLedControl};} policy="read,write,policy,test"
+/system/script/run scrLedControl
