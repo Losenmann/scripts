@@ -1,20 +1,19 @@
 ############### COVER ################
 /system/script/add name="scrUpload" policy="read,write,policy,test" source={
 ################ BODY ################
-:local vers "0.2"
 # To load one of the scripts, just pass the script name=value: led=true
 # Implemented checking for new versions with each function call
 # Supported scripts: led, iptv, wifi
 ############## FUNCTION ##############
 :global funcUpload do={
+:local vers "0.2"
 :local uri "https://raw.githubusercontent.com/Losenmann/scripts/master/RouterBOARD"
 :local result
 # Autoupdate
     :if ([{:local result [/tool/fetch "$uri/upload.rsc" as-value output=user];
-        :pick ($result->"data") 168 171}] = $vers) do={
+        :find ($result->"data") $vers}] = $vers) do={
 # LED Cintrol
         :if (led = "true") do={
-            :put ok;
             set result [/tool/fetch "$uri/ros7_led.rsc" as-value output=user];
             :execute [($result->"data")];
         }
