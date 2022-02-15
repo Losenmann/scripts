@@ -1,4 +1,4 @@
-######## VERSION 0.1 ########
+:local vers "0.1"
 # Variables: led,iptv
 # Autoupdate
 :global funcUpload do={
