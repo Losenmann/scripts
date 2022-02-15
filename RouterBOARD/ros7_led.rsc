@@ -20,7 +20,7 @@
 ############# /FUNCTION ##############
 # Create a function autorun task
 :if ([/system/scheduler/find name="mainStartup"] = "") \
-    do={/system/scheduler/add name="mainStartup" start-time="startup"};
+    do={/system/scheduler/add name="mainStartup" start-time="startup" policy="read,write,policy,test"};
 :if ([/system/scheduler/find name="mainStartup" on-event~".scrledcontrol."] = "") \
     do={/system/scheduler/set mainStartup on-event=([/system/scheduler/get mainStartup value-name="on-event"] . "/system/script/run scrLedControl\n")};
 # Creating task to enable/disable leds
