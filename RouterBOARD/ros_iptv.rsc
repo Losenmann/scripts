@@ -34,6 +34,6 @@
             print;
             move destination=1 numbers=[find chain="forward" protocol="udp" dst-port="1234" action="accept"];
         };
-		:put "Gateway successfully configured for IPTV";
-	}
+        :put "Gateway successfully configured for IPTV";
+    }
 /}
