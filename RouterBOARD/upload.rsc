@@ -10,13 +10,11 @@
 :local uri "https://raw.githubusercontent.com/Losenmann/scripts/master/RouterBOARD"
 :local result
 # Autoupdate
-:put $vers;
-:put [{:local result [/tool/fetch "$uri/upload.rsc" as-value output=user]; :pick ($result->"data") 168 171}]
-
     :if ([{:local result [/tool/fetch "$uri/upload.rsc" as-value output=user];
         :pick ($result->"data") 168 171}] = $vers) do={
 # LED Cintrol
         :if (led = "true") do={
+            :put ok;
             set result [/tool/fetch "$uri/ros7_led.rsc" as-value output=user];
             :execute [($result->"data")];
         }
