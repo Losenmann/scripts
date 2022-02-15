@@ -1,7 +1,12 @@
-:global funcUpload do={
+#### Version 1
 # Variables: led,iptv
+# Autoupdate
+:global funcUpload do={
 :local uri "https://raw.githubusercontent.com/Losenmann/scripts/master/RouterBOARD"
 :local result
+
+
+
 # LED Cintrol
     :if (led = "true") do={
         :set result [/tool/fetch $uri/ros7_led.rsc as-value output=user];
