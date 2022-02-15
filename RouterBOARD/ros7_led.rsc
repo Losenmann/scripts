@@ -25,9 +25,9 @@
     do={/system/scheduler/set mainStartup on-event=([/system/scheduler/get mainStartup value-name="on-event"] . "/system/script/run scrLedControl\n")};
 # Creating task to enable/disable leds
 :if ([/system/scheduler/find name="LedControlOn"] = "") \
-    do={/system/scheduler/add name="LedControlOn" start-time=$t1 policy="read,write,policy,test" interval="1d" on-event="\$funcLedControl x=1"};
+    do={/system/scheduler/add name="LedControlOn" start-time=$t1 policy="read,write,policy,test" interval="1d" on-event="\$funcLedControl x=true"};
 :if ([/system/scheduler/find name="LedControlOff"] = "") \
-    do={/system/scheduler/add name="LedControlOff" start-time=$t2 policy="read,write,policy,test" interval="1d" on-event="\$funcLedControl x=0";};
+    do={/system/scheduler/add name="LedControlOff" start-time=$t2 policy="read,write,policy,test" interval="1d" on-event="\$funcLedControl x=false";};
 ############### /BODY ################
 };
 /system/script/run scrLedControl
