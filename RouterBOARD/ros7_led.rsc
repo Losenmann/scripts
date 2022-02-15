@@ -1,6 +1,6 @@
 ############### COVER ################
 /system/script/add name="scrLedControl" policy="read,write,policy,test" source={
-\r################ BODY ################
+################ BODY ################
 # The cover is needed to import the script
 # Control via "x=true/false" or call a function without passing an argument
 # The "mainStartup" scheduler is used to automatically load the script
