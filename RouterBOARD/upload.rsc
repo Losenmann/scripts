@@ -6,7 +6,7 @@
 # Supported scripts: led, iptv, wifi
 ############## FUNCTION ##############
 :global funcUpload do={
-:local vers "0.2"
+:local vers 0.2
 :local uri "https://raw.githubusercontent.com/Losenmann/scripts/master/RouterBOARD"
 :local result
 # Autoupdate
