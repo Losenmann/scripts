@@ -19,12 +19,8 @@
         }
 # IPTV Package
         :if (iptv = "true") do={
-            :if ([:pick [/system/resource/get version] 0] >= 7) do={
-                set result [/tool/fetch "$uri/ros6_iptv.rsc" as-value output=user];
-                :execute [($result->"data")];
-            } else {
-                :error "IPTV Already included in the system package"
-            }
+            set result [/tool/fetch "$uri/ros_iptv.rsc" as-value output=user];
+            :execute [($result->"data")]; $funcIptv;
         }
 # Wi-Fi Configure
         :if (wifi = "true") do={
