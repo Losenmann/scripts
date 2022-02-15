@@ -6,12 +6,12 @@
 # Supported scripts: led, iptv, wifi
 ############## FUNCTION ##############
 :global funcUpload do={
-:local vers 0.2
+:local version 0.2
 :local uri "https://raw.githubusercontent.com/Losenmann/scripts/master/RouterBOARD"
 :local result
 # Autoupdate
     :if ([{:local result [/tool/fetch "$uri/upload.rsc" as-value output=user];
-        :find ($result->"data") $vers}] = $vers) do={
+        [:find ($result->"data") "version $version"]}] != "\$result") do={
 # LED Cintrol
         :if (led = "true") do={
             set result [/tool/fetch "$uri/ros7_led.rsc" as-value output=user];
