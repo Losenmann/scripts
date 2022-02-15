@@ -32,6 +32,7 @@
             :execute [($result->"data")];
         }
     } else={
+        /system/script/remove scrUpload;
         set result [/tool/fetch "$uri/upload.rsc" as-value output=user];
         :execute [($result->"data")];
     }
