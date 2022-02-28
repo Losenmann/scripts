@@ -1,3 +1,7 @@
+############### COVER ################
+/system script add name="scrWgSetup" policy="read,write,policy,test" source={
+################ BODY ################
+############## FUNCTION ##############
 :global funcWG do={
 :local name="name1"
 :local name="lookdst"
@@ -15,3 +19,7 @@ add public-key=$keydst allowed-address="0.0.0.0/0" interface="wg-srv";
 :delay 1s;
 /file/set number=[find name="wg.conf.txt"] contents="[Interface]\nPrivateKey = $lookdst\nAddress = 172.16.42.2/26\nDNS = 192.168.8.1\n\n[Peer]\nPublicKey = $keysrv\nAllowedIPs = 0.0.0.0/0\nEndpoint = inrate.xyz:25694";
 }
+############## FUNCTION ##############
+################ BODY ################
+}
+############### COVER ################
