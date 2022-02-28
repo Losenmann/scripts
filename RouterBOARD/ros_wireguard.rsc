@@ -25,7 +25,7 @@
     :if ([print count-only where interface=($srv->"name")] <= 0) do={
         add address=($srv->"net") interface=($srv->"name");
     } else={
-        :set ($srv->"net") [get [find interface=($srv->"name")] address];
+        :set ($host->"addr") [get [find interface=($srv->"name")] address];
     }
 /file/
     print file="wg.conf";
