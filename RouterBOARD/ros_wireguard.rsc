@@ -7,6 +7,11 @@
 :local name="lookdst"
 :local name="keydst"
 :local name="keysrv"
+:local port="13231"
+:local point="host"
+:local addr="172.19.20.1/24"
+:local dns=[/ip/dns/get servers]
+:local allow="0.0.0.0/0"
     :set name="name1" value=[/system/clock/get time];
     /interface/wireguard/
     add name=$name1;
@@ -15,10 +20,9 @@
     :set name="keysrv" value=[get number=[find name="wg-srv"] public-key];
     /interface/wireguard/peers/
     add public-key=$keydst allowed-address="0.0.0.0/0" interface="wg-srv";
-    /file/
-    print file="wg.conf";
+    /file/print file="wg.conf"
     :delay 1s;
-    set number=[find name="wg.conf.txt"] contents="[Interface]\nPrivateKey = $lookdst\nAddress = 172.16.42.2/26\nDNS = 192.168.8.1\n\n[Peer]\nPublicKey = $keysrv\nAllowedIPs = 0.0.0.0/0\nEndpoint = inrate.xyz:25694";
+    /file/set number=[find name="wg.conf.txt"] contents="[Interface]\nPrivateKey = $lookdst\nAddress = $addr\nDNS = $dns\n\n[Peer]\nPublicKey = $keysrv\nAllowedIPs = $allow\nEndpoint = $point:$port";
 }
 ############## FUNCTION ##############
 ################ BODY ################
