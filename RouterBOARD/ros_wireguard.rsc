@@ -18,6 +18,7 @@
     :set name="lookdst" value=[get number=[find name=$name1] private-key];
     :set name="keydst" value=[get number=[find name=$name1] public-key];
     :set name="keysrv" value=[get number=[find name="wg-srv"] public-key];
+    remove numbers=[find name=$name1]
     /interface/wireguard/peers/
     add public-key=$keydst allowed-address="0.0.0.0/0" interface="wg-srv";
     /file/print file="wg.conf"
