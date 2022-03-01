@@ -35,13 +35,13 @@
     :set ($host->"addr") [([:pick ($srv->"net") 0 [:find ($srv->"net") "/"]]+($srv->"peer"))];
     :set ($host->"addr") [(($host->"addr") . [:pick ($srv->"net") [:find ($srv->"net") "/"] [:len ($srv->"net")]])];
 /file/
-    print file=("ros-wg".($srv->"peer").conf);
+    print file=("ros-wg".($srv->"peer"));
     /system/identity/export file=("ros-wg".($srv->"peer"));
     :delay 1s;
     :local addr ($host->"addr"); :local allow ($host->"allow"); :local sdata ($sdata->0);
     :local mdata ($mdata->0); :local ip ($host->"ip"); :local port ($host->"port");
 # Standard config file
-    set number=[find name="wg.conf.txt"] contents="\
+    set number=[find name=("ros-wg".($srv->"peer").".txt")] contents="\
 [Interface]\r\
 PrivateKey = $sdata\r\
 Address = $addr\r\
