@@ -1,0 +1,7 @@
+{
+:local i 0
+  :while (:len [:find in=($result->"data") key="DeviceName" from=$i] > 0)  do={ 
+    :put [:pick ($result->"data") ([:find in=($result->"data") key="DeviceName" from=$i]+13) [:find in=($result->"data") key="\"" from=([:find in=($result->"data") key="DeviceName" from=$i]+13)]];
+    :set i ([:find in=($result->"data") key="DeviceName" from=$i]+1)
+	}
+}
