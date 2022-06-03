@@ -1,0 +1,12 @@
+[   
+    {
+        "enumerators":{
+            "id": "1",
+            "data": {
+                "name": "test",
+                "value": "name",
+                "unit": "m"
+            }
+        }
+    }
+]
