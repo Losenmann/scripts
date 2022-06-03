@@ -1,12 +1,19 @@
-[   
-    {
-        "enumerators":{
-            "id": "1",
-            "data": {
-                "name": "test",
-                "value": "name",
-                "unit": "m"
-            }
-        }
-    }
-]
+{
+	"enumerators": [{
+			"id": "1",
+			"data": {
+				"name": "test1",
+				"value": "val1",
+				"unit": "m1"
+			}
+		},
+		{
+			"id": "2",
+			"data": {
+				"name": "test2",
+				"value": "val2",
+				"unit": "m2"
+			}
+		}
+	]
+}
