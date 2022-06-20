@@ -1,33 +1,51 @@
 version: "3.7"
+networks:
+  net-proxy:
+    name: 'net-proxy'
+    driver: 'bridge'
+  net-zabbix:
+    name: 'net-zabbix'
+    driver: 'bridge'
+    ipam:
+      config:
+        - subnet: '172.18.1.0/16'
+          gateway: '172.18.1.1'
+        
 
 services:
+  nginx-proxy:
+    image: 'jwilder/nginx-proxy'
+    container_name: 'nginx-proxy'
+    networks:
+      - 'net-proxy'
+    ports:
+      - '80:80'
+      - '433:433'
+    volumes:
+      - '/var/run/docker.sock:/tmp/docker.sock:ro'
+    restart: always
+
   iptv-services:
     container_name: 'IPTV-Services'
     network_mode: 'host'
     expose:
-      - '4022'
+      - '4023'
     build:
       context: 'https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/iptv.dockerfile'
     restart: always
-  
-  mysql-server:
-    container_name: 'MariaDB'
-    image: 'mariadb:latest'
+
+  homeassistant:
+    container_name: 'Home-Assistant'
+    image: 'ghcr.io/home-assistant/home-assistant:stable'
     networks:
-      net:
-        ipv4_address: 172.18.0.3
-    ports:
-      - '3306:3306'
+      - 'net-proxy'
+    expose:
+      - '8123'
     environment:
-      MYSQL_ROOT_PASSWORD: 'root_pwd'
-      MYSQL_DATABASE: 'zabbix'
-      MYSQL_USER: 'zabbix'
-      MYSQL_PASSWORD: 'zabb_pwd'
-    command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_bin']
-    restart: always
-    healthcheck:
-      test: mysqladmin -proot_pwd ping -h localhost
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 10s
+      VIRTUAL_HOST: 'site1.local'
+    volumes:
+      - '/PATH_TO_YOUR_CONFIG:/config'
+      - '/etc/localtime:/etc/localtime:ro'
+#    command: bash -c 'printf "http:\n  server_port: 8123\n  use_x_forwarded_for: true\n  trusted_proxies:\n    - 0.0.0.0/0\n  ip_ban_enabled: true\n  login_attempts_threshold: 5" >>
+    privileged: true
+    restart: unless-stopped
