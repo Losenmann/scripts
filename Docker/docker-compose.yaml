@@ -44,7 +44,7 @@ services:
     environment:
       VIRTUAL_HOST: 'site1.local'
     volumes:
-      - '/PATH_TO_YOUR_CONFIG:/config'
+#      - '/PATH_TO_YOUR_CONFIG:/config'
       - '/etc/localtime:/etc/localtime:ro'
 #    command: bash -c 'printf "http:\n  server_port: 8123\n  use_x_forwarded_for: true\n  trusted_proxies:\n    - 0.0.0.0/0\n  ip_ban_enabled: true\n  login_attempts_threshold: 5" >>
     privileged: true
