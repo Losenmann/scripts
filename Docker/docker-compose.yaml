@@ -1,0 +1,33 @@
+version: "3.7"
+
+services:
+  iptv-services:
+    container_name: 'IPTV-Services'
+    network_mode: 'host'
+    expose:
+      - '4022'
+    build:
+      context: 'https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/iptv.dockerfile'
+    restart: always
+  
+  mysql-server:
+    container_name: 'MariaDB'
+    image: 'mariadb:latest'
+    networks:
+      net:
+        ipv4_address: 172.18.0.3
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 'root_pwd'
+      MYSQL_DATABASE: 'zabbix'
+      MYSQL_USER: 'zabbix'
+      MYSQL_PASSWORD: 'zabb_pwd'
+    command: ['mysqld', '--character-set-server=utf8', '--collation-server=utf8_bin']
+    restart: always
+    healthcheck:
+      test: mysqladmin -proot_pwd ping -h localhost
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
