@@ -27,16 +27,18 @@ services:
 
   iptv-services:
     container_name: 'IPTV-Services'
+    build:
+      context: 'https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/iptv.dockerfile'
     network_mode: 'host'
     expose:
       - '4023'
-    build:
-      context: 'https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/iptv.dockerfile'
     restart: always
 
   homeassistant:
     container_name: 'Home-Assistant'
-    image: 'ghcr.io/home-assistant/home-assistant:stable'
+#   image: 'ghcr.io/home-assistant/home-assistant:stable'
+    build:
+      context: 'https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/homeassistant.dockerfile'
     networks:
       - 'net-proxy'
     expose:
@@ -44,8 +46,7 @@ services:
     environment:
       VIRTUAL_HOST: 'site1.local'
     volumes:
-#      - '/PATH_TO_YOUR_CONFIG:/config'
+#     - '/PATH_TO_YOUR_CONFIG:/config'
       - '/etc/localtime:/etc/localtime:ro'
-#    command: bash -c 'printf "http:\n  server_port: 8123\n  use_x_forwarded_for: true\n  trusted_proxies:\n    - 0.0.0.0/0\n  ip_ban_enabled: true\n  login_attempts_threshold: 5" >>
     privileged: true
     restart: unless-stopped
