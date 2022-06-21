@@ -50,9 +50,9 @@ services:
     container_name: 'MariaDB'
     image: 'mariadb:latest'
     networks:
-      - 'net-proxy'
-    #  net-zabbix:
-    #    ipv4_address: 172.18.0.3
+      net-proxy:
+      net-zabbix:
+        ipv4_address: 172.18.0.3
     ports:
       - '3306:3306'
     environment:
@@ -73,9 +73,9 @@ services:
     container_name: "Zabbix-Server"
     image: 'zabbix/zabbix-server-mysql:latest'
     networks:
-      - 'net-proxy'
-    #  net-zabbix:
-    #    ipv4_address: 172.18.0.4
+      net-proxy:
+      net-zabbix:
+        ipv4_address: 172.18.0.4
     ports:
       - '10051:10051'
     environment:
@@ -95,21 +95,21 @@ services:
     container_name: 'Zabbix-Frontend'
     image: 'zabbix/zabbix-web-nginx-mysql:latest'
     networks:
-      - 'net-proxy'
-    #  net-zabbix:
-    #    ipv4_address: 172.18.0.5
+      net-proxy:
+      net-zabbix:
+        ipv4_address: 172.18.0.5
     expose:
-      - '8443'
+      - '8080'
     environment:
       - VIRTUAL_HOST=${VIRTUAL_HOST_ZBX}
-      - VIRTUAL_PORT=8443
+      - VIRTUAL_PORT=8080
       - DB_SERVER_HOST=mysql-server
       - MYSQL_DATABASE=${MYSQL_DB_ZBX}
       - MYSQL_USER=${MYSQL_USER_ZBX}
       - MYSQL_PASSWORD=${MYSQL_PASS_ZBX}
       - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASS}
-      - PHP_TZ='Asia/Krasnoyarsk'
-      - ZBX_SERVER_NAME='Zabbix Docker'
+      - PHP_TZ=Asia/Krasnoyarsk
+      - ZBX_SERVER_NAME=Zabbix Docker
     links:
       - mysql-server:mysql
       - zabbix-server-mysql:zabbix-server
