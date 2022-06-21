@@ -13,9 +13,29 @@ networks:
         
 
 services:
+  portainer:
+    container_name: 'Portainer'
+    image: 'portainer/portainer-ce'
+    networks:
+      - 'net-proxy'
+    expose:
+      - '9000'
+      - '9443'
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+      - 'portainer_data:/data'
+      - '~/local-certs:/certs'
+    environment:
+      - VIRTUAL_HOST=${PORTAINER_VIRTUAL_HOST}
+    command:
+      --ssl
+      --sslcert /certs/portainer.crt
+      --sslkey /certs/portainer.key
+    restart: always
+    
   nginx-proxy:
-    image: 'jwilder/nginx-proxy'
     container_name: 'nginx-proxy'
+    image: 'jwilder/nginx-proxy'
     networks:
       - 'net-proxy'
     ports:
@@ -44,9 +64,12 @@ services:
     expose:
       - '8123'
     environment:
-      VIRTUAL_HOST: 'site1.local'
+      - VIRTUAL_HOST=${HASS_VIRTUAL_HOST}
     volumes:
 #     - '/PATH_TO_YOUR_CONFIG:/config'
       - '/etc/localtime:/etc/localtime:ro'
     privileged: true
     restart: unless-stopped
+
+volumes:
+  portainer_data:
