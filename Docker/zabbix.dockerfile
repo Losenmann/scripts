@@ -32,6 +32,8 @@ COPY --from=builder ["/tmp/zabbix-${ZBX_VERSION}/src/zabbix_get/zabbix_get", "/u
 COPY --from=builder ["/tmp/zabbix-${ZBX_VERSION}/src/zabbix_sender/zabbix_sender", "/usr/bin/zabbix_sender"]
 COPY --from=builder ["/tmp/zabbix-${ZBX_VERSION}/conf/zabbix_server.conf", "/etc/zabbix/zabbix_server.conf"]
 COPY --from=builder ["/tmp/zabbix-${ZBX_VERSION}/database/mysql/create_server.sql.gz", "/usr/share/doc/zabbix-server-mysql/create.sql.gz"]
+COPY --from=builder ["/tmp/zabbix-${ZBX_VERSION}/ui", "/usr/share/zabbix"]
+COPY ["conf/etc/", "/etc/"]
 
 RUN set -eux && \
     INSTALL_PKGS="bash \
@@ -141,10 +143,12 @@ EXPOSE 10051/TCP 8080/TCP 8443/TCP
 WORKDIR /var/lib/zabbix
 VOLUME ["/var/lib/zabbix/snmptraps", "/var/lib/zabbix/export"]
 STOPSIGNAL SIGTERM
-COPY ["docker-entrypoint.sh", "/usr/bin/"]
+COPY ["docker-entrypoint-s.sh", "/usr/bin/"]
+COPY ["docker-entrypoint-f.sh", "/usr/bin/"]
 COPY --from=builder ["/tmp/zabbix-${ZBX_VERSION}/ui", "/usr/share/zabbix"]
 COPY ["conf/etc/", "/etc/"]
-ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/docker-entrypoint.sh"]
+ENTRYPOINT ["/sbin/tini", "--", "/usr/bin/docker-entrypoint-s.sh"]
+#ENTRYPOINT ["docker-entrypoint-f.sh"]
 USER 1997
 CMD ["/usr/sbin/zabbix_server", "--foreground", "-c", "/etc/zabbix/zabbix_server.conf"]
 
