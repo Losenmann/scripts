@@ -37,7 +37,7 @@ services:
       - 'portainer_data:/data'
     #  - '~/local-certs:/certs'
     environment:
-      - VIRTUAL_HOST=${PORTAINER_VIRTUAL_HOST}
+      - VIRTUAL_HOST=${VIRTUAL_HOST_PORTAINER}
       - VIRTUAL_PORT=9000
     #command:
     #  --ssl
@@ -146,5 +146,21 @@ services:
     privileged: true
     restart: unless-stopped
 
+  nextcloud:
+    container_name: 'NextCloud'
+    image: 'nextcloud'
+    networks:
+      - 'net-proxy'
+    expose:
+      - '80'
+    environment:
+      - VIRTUAL_HOST=${VIRTUAL_HOST_NEXTCLOUD}
+    volumes:
+      - nextcloud_data:/var/www/html
+    depends_on:
+      - mysql-server
+    restart: always
+
 volumes:
   portainer_data:
+  nextcloud_data:
