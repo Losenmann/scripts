@@ -117,7 +117,6 @@ RUN set -eux && \
     chown --quiet -R zabbix:root /var/lib/php/session/ /var/lib/nginx/ && \
     chgrp -R 0 /var/lib/php/session/ /var/lib/nginx/ && \
     chmod -R g=u /var/lib/php/session/ /var/lib/nginx/ && \
-    
     mkdir -p /var/lib/zabbix && \
     mkdir -p /usr/lib/zabbix/alertscripts && \
     mkdir -p /var/lib/zabbix/enc && \
