@@ -1,5 +1,5 @@
 FROM alpine:latest
-LABEL maintainer="virus14m@gmail.com"
+#LABEL maintainer="virus14m@gmail.com"
 RUN apk add git make gcc libc-dev \
 # python3 py3-setuptools openrc nginx
   && git clone https://github.com/pcherenkov/udpxy.git \
