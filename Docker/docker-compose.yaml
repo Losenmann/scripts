@@ -5,12 +5,12 @@ networks:
 
 services:
   nginx-proxy:
-    container_name: Nginx-Proxy
-    image: jwilder/nginx-proxy
+    container_name: "Nginx-Proxy"
+    image: "jwilder/nginx-proxy"
     networks:
       - nginx-proxy
     ports:
-      - "443:443"
+      - 443:443
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /opt/revers-proxy/certs:/etc/nginx/certs
@@ -18,8 +18,8 @@ services:
     restart: always
 
   portainer:
-    container_name: Portainer
-    image: portainer/portainer
+    container_name: "Portainer"
+    image: "portainer/portainer"
     networks:
       - nginx-proxy
     expose:
@@ -28,59 +28,93 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /opt/portainer/data:/data
     environment:
-        - VIRTUAL_HOST=${P_VIRTUAL_HOST_PORTAINER}
+        - VIRTUAL_HOST=${VIRTUAL_HOST_PORTAINER}
         - VIRTUAL_PORT=9000
     restart: always
 
   postgres-pro:
-    container_name: PostgresPro
-    image: postgrespro
+    container_name: "PostgresPro"
+    image: "postgres-pro"
     build:
-      context: .
-      dockerfile: "./dockerfile/PostgresPro.dockerfile"
+      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/postgres-pro.dockerfile"
       args:
-        - vers=${P_POSTGRESPRO_VERSION}
-    network_mode: bridge
-    ports:
+        - vers=${PGPRO_VERSION}
+    networks:
+      - network-db
+    ports: 
       - 5432:5432
     volumes:
       - postgrespro:/var/lib/pgpro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
     tty: true
-    stdin_open: true
+    restart: always
 
   iptv-services:
     container_name: "IPTV-Services"
-    image: iptv-services
+    image: "iptv-services"
     build:
-      context: 'https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/iptv.dockerfile'
+      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/iptv.dockerfile"
     network_mode: host
     expose:
       - 4022
     restart: always
 
   zabbix-server:
-    container_name: "Zabbix-Server"
-    image: zabbix-server
-    build:
-      context: .
-      dockerfile: "./dockerfile/Zabbix.dockerfile"
+    container_name: "Zabbix-Srv"
+    image: "zabbix/zabbix-server-pgsql:ubuntu-latest"
     networks:
+      - network-db
+      - network-zabbix
+    ports:
+      - 10051:10051
+    environment:
+      - DB_SERVER_HOST=postgres-pro
+      - POSTGRES_USER=${ZABBIX_DB_USER}
+      - POSTGRES_PASSWORD=${ZABBIX_DB_PASSWORD}
+    depends_on:
+      - postgres-pro
+    healthcheck:
+      test: ["CMD", "nmap", "localhost", "-p10051", "|grep", "open", "||echo", "1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    restart: always
+
+  zabbix-web:
+    container_name: "Zabbix-Web"
+    image: "zabbix/zabbix-web-nginx-pgsql:ubuntu-latest"
+    networks:
+      - network-db
+      - network-zabbix
       - nginx-proxy
     expose:
-      - 10051
       - 8080
     environment:
-      - VIRTUAL_HOST=${P_VIRTUAL_HOST_ZABBIX}
+      - VIRTUAL_HOST=${VIRTUAL_HOST_ZABBIX}
       - VIRTUAL_PORT=8080
-      - DB_SERVER_HOST=mysql-server
-      - MYSQL_DATABASE=${MYSQL_DB_ZBX}
-      - MYSQL_USER=${MYSQL_USER_ZBX}
-      - MYSQL_PASSWORD=${MYSQL_PASS_ZBX}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASS}
-    links:
+      - DB_SERVER_HOST=postgres-pro
+      - POSTGRES_USER=${ZABBIX_DB_USER}
+      - POSTGRES_PASSWORD=${ZABBIX_DB_PASSWORD}
+      - ZBX_SERVER_HOST=zabbix-server
+      - ZBX_SERVER_NAME=Zabbix Docker
+      - PHP_TZ=${ZABBIX_TIMEZONE}
+    depends_on:
       - postgres-pro
+      - zabbix-server
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
     restart: always
 
 volumes:
   postgrespro:
-   driver: local
+    driver: local
