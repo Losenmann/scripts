@@ -14,7 +14,7 @@ RUN echo 'addhba () { echo "host	all		all		$1		md5" >> /var/lib/pgpro/$PGVERSION
     && apt-get update && apt-get install -y wget tzdata\
     && wget -O - "https://repo.postgrespro.ru/${DB_VERSION}/keys/pgpro-repo-add.sh" |bash \
     && apt-get install -y postgrespro-${DB_VERSION} \
-    && su postgres -c "psql -c \"CREATE ROLE ${DB_ADMIN} WITH CREATEDB CREATEROLE LOGIN SUPERUSER REPLICATION BYPASSRLS PASSWORD '${DB_PASSWORD}';\" 2> /dev/null"
+    && su postgres -c "psql -c \"CREATE ROLE $DB_ADMIN WITH CREATEDB CREATEROLE LOGIN SUPERUSER REPLICATION BYPASSRLS PASSWORD '$DB_PASSWORD';\" 2> /dev/null"
 
 VOLUME /var/lib/pgpro
 
