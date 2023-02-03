@@ -10,6 +10,12 @@ services:
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /opt/revers-proxy/certs:/etc/nginx/certs
+    healthcheck:
+      test: ["CMD", "service", "nginx", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
     tty: true
     restart: always
 
@@ -22,21 +28,24 @@ services:
       - 9000
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - /opt/portainer/data:/data
+      - portainer:/data
     environment:
-        - VIRTUAL_HOST=${ENV_VIRTUAL_HOST_PORTAINER:-"portainer.example.loc"}
-        - VIRTUAL_PORT=${ENV_VIRTUAL_PORT_PORTAINER:-"9000"}
+      - VIRTUAL_HOST=${ENV_VIRTUAL_HOST_PORTAINER:-portainer.example.loc}
+      - VIRTUAL_PORT=${ENV_VIRTUAL_PORT_PORTAINER:-9000}
+    depends_on:
+      - nginx-proxy
+    tty: true
     restart: always
 
   postgres-pro:
     container_name: "PostgresPro"
     image: "postgres-pro"
     build:
-      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/Dockerfile/postgres-pro.dockerfile"
+      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/Dockerfiles/postgres-pro.dockerfile"
       args:
-        - DB_VERSION=${ENV_DB_VERSION:-"std-15"}
-        - DB_ADMIN=${ENV_DB_ADMIN:-"admin"}
-        - DB_PASSWORD=${ENV_DB_PASSWORD:-"pgpassword"}
+        - DB_VERSION=${ENV_DB_VERSION:-std-15}
+        - DB_ADMIN=${ENV_DB_ADMIN:-admin}
+        - DB_PASSWORD=${ENV_DB_PASSWORD:-pgpassword}
     networks:
       - network-db
     ports: 
@@ -52,14 +61,15 @@ services:
     tty: true
     restart: always
 
-  iptv-services:
-    container_name: "IPTV-Services"
-    image: "iptv-services"
+  iptv-service:
+    container_name: "IPTV-Service"
+    image: "iptv-service"
     build:
-      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/Dockerfile/udpxy.dockerfile"
+      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/Dockerfiles/iptv-service.dockerfile"
     network_mode: host
     expose:
       - 4022
+    tty: true
     restart: always
 
   zabbix-server:
@@ -71,9 +81,9 @@ services:
     ports:
       - 10051:10051
     environment:
-      - DB_SERVER_HOST=${ENV_ZABBIX_DB_HOST:-"postgres-pro"}
-      - POSTGRES_USER=${ENV_ZABBIX_DB_USER:-"zabbix"}
-      - POSTGRES_PASSWORD=${ENV_ZABBIX_DB_PASSWORD:-"zabbix"}
+      - DB_SERVER_HOST=${ENV_ZABBIX_DB_HOST:-postgres-pro}
+      - POSTGRES_USER=${ENV_ZABBIX_DB_USER:-zabbix}
+      - POSTGRES_PASSWORD=${ENV_ZABBIX_DB_PASSWORD:-zabbix}
     depends_on:
       - postgres-pro
     healthcheck:
@@ -82,6 +92,7 @@ services:
       timeout: 5s
       retries: 3
       start_period: 30s
+    tty: true
     restart: always
 
   zabbix-web:
@@ -94,23 +105,25 @@ services:
     expose:
       - 8080
     environment:
-      - VIRTUAL_HOST=${ENV_VIRTUAL_HOST_ZABBIX:-"zabbix.example.loc"}
-      - VIRTUAL_PORT=${ENV_VIRTUAL_PORT_ZABBIX:-"8080"}
-      - DB_SERVER_HOST=${ENV_ZABBIX_DB_HOST:-"postgres-pro"}
-      - POSTGRES_USER=${ENV_ZABBIX_DB_USER:-"zabbix"}
-      - POSTGRES_PASSWORD=${ENV_ZABBIX_DB_PASSWORD:-"zabbix"}
-      - ZBX_SERVER_HOST=${ENV_ZABBIX_SERVER_HOST:-"zabbix-server"}
-      - ZBX_SERVER_NAME=${ENV_ZABBIX_SERVER_NAME:-"Zabbix Docker"}
-      - PHP_TZ=${ENV_ZABBIX_TIMEZONE:-"Asia/Krasnoyarsk"}
+      - VIRTUAL_HOST=${ENV_VIRTUAL_HOST_ZABBIX:-zabbix.example.loc}
+      - VIRTUAL_PORT=${ENV_VIRTUAL_PORT_ZABBIX:-8080}
+      - DB_SERVER_HOST=${ENV_ZABBIX_DB_HOST:-postgres-pro}
+      - POSTGRES_USER=${ENV_ZABBIX_DB_USER:-zabbix}
+      - POSTGRES_PASSWORD=${ENV_ZABBIX_DB_PASSWORD:-zabbix}
+      - ZBX_SERVER_HOST=${ENV_ZABBIX_SERVER_HOST:-zabbix-server}
+      - ZBX_SERVER_NAME=${ENV_ZABBIX_SERVER_NAME:-Zabbix Docker}
+      - PHP_TZ=${ENV_ZABBIX_TIMEZONE:-Asia/Krasnoyarsk}
     depends_on:
       - postgres-pro
       - zabbix-server
+      - nginx-proxy
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/ping"]
       interval: 10s
       timeout: 5s
       retries: 3
-      start_period: 30s
+      start_period: 10s
+    tty: true
     restart: always
 
 networks:
@@ -144,5 +157,8 @@ networks:
 
 volumes:
   postgrespro:
+    name: "postgrespro"
     driver: local
-#  portainer_data:
+  portainer:
+    name: "portainer"
+    driver: local
