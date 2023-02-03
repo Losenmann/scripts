@@ -1,8 +1,4 @@
 version: "3.9"
-networks:
-  nginx-proxy:
-    name: "nginx-proxy"
-
 services:
   nginx-proxy:
     container_name: "Nginx-Proxy"
@@ -28,20 +24,19 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - /opt/portainer/data:/data
     environment:
-        - VIRTUAL_HOST=${ENV_VIRTUAL_HOST_PORTAINER}
-        - VIRTUAL_PORT=9000
+        - VIRTUAL_HOST=${ENV_VIRTUAL_HOST_PORTAINER:-"portainer.example.loc"}
+        - VIRTUAL_PORT=${ENV_VIRTUAL_PORT_PORTAINER:-"9000"}
     restart: always
 
   postgres-pro:
     container_name: "PostgresPro"
     image: "postgres-pro"
     build:
-      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/postgres-pro.dockerfile"
+      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/Dockerfile/postgres-pro.dockerfile"
       args:
-        - DB_VERSION=${ENV_DB_VERSION}
-        - DB_ADMIN=${ENV_DB_ADMIN}
-        - DB_PASSWORD=${ENV_DB_PASSWORD}
-        - 
+        - DB_VERSION=${ENV_DB_VERSION:-"std-15"}
+        - DB_ADMIN=${ENV_DB_ADMIN:-"admin"}
+        - DB_PASSWORD=${ENV_DB_PASSWORD:-"pgpassword"}
     networks:
       - network-db
     ports: 
@@ -61,7 +56,7 @@ services:
     container_name: "IPTV-Services"
     image: "iptv-services"
     build:
-      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/iptv.dockerfile"
+      context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/Dockerfile/udpxy.dockerfile"
     network_mode: host
     expose:
       - 4022
@@ -76,9 +71,9 @@ services:
     ports:
       - 10051:10051
     environment:
-      - DB_SERVER_HOST=postgres-pro
-      - POSTGRES_USER=${ENV_ZABBIX_DB_USER}
-      - POSTGRES_PASSWORD=${ENV_ZABBIX_DB_PASSWORD}
+      - DB_SERVER_HOST=${ENV_ZABBIX_DB_HOST:-"postgres-pro"}
+      - POSTGRES_USER=${ENV_ZABBIX_DB_USER:-"zabbix"}
+      - POSTGRES_PASSWORD=${ENV_ZABBIX_DB_PASSWORD:-"zabbix"}
     depends_on:
       - postgres-pro
     healthcheck:
@@ -99,14 +94,14 @@ services:
     expose:
       - 8080
     environment:
-      - VIRTUAL_HOST=${ENV_VIRTUAL_HOST_ZABBIX}
-      - VIRTUAL_PORT=8080
-      - DB_SERVER_HOST=postgres-pro
-      - POSTGRES_USER=${ENV_ZABBIX_DB_USER}
-      - POSTGRES_PASSWORD=${ENV_ZABBIX_DB_PASSWORD}
-      - ZBX_SERVER_HOST=zabbix-server
-      - ZBX_SERVER_NAME=Zabbix Docker
-      - PHP_TZ=${ENV_ZABBIX_TIMEZONE}
+      - VIRTUAL_HOST=${ENV_VIRTUAL_HOST_ZABBIX:-"zabbix.example.loc"}
+      - VIRTUAL_PORT=${ENV_VIRTUAL_PORT_ZABBIX:-"8080"}
+      - DB_SERVER_HOST=${ENV_ZABBIX_DB_HOST:-"postgres-pro"}
+      - POSTGRES_USER=${ENV_ZABBIX_DB_USER:-"zabbix"}
+      - POSTGRES_PASSWORD=${ENV_ZABBIX_DB_PASSWORD:-"zabbix"}
+      - ZBX_SERVER_HOST=${ENV_ZABBIX_SERVER_HOST:-"zabbix-server"}
+      - ZBX_SERVER_NAME=${ENV_ZABBIX_SERVER_NAME:-"Zabbix Docker"}
+      - PHP_TZ=${ENV_ZABBIX_TIMEZONE:-"Asia/Krasnoyarsk"}
     depends_on:
       - postgres-pro
       - zabbix-server
@@ -118,6 +113,36 @@ services:
       start_period: 30s
     restart: always
 
+networks:
+  nginx-proxy:
+    name: "nginx-proxy"
+    driver: "bridge"
+    ipam:
+      config:
+        - subnet: "172.18.0.0/24"
+          gateway: "172.18.0.1"
+    internal: false
+    attachable: true
+  network-db:
+    name: "network-db"
+    driver: "bridge"
+    ipam:
+      config:
+        - subnet: "172.18.1.0/24"
+          gateway: "172.18.1.1"
+    internal: false
+    attachable: true
+  network-zabbix:
+    name: "network-zabbix"
+    driver: "bridge"
+    ipam:
+      config:
+        - subnet: "172.18.2.0/29"
+          gateway: "172.18.2.1"
+    internal: true
+    attachable: false
+
 volumes:
   postgrespro:
     driver: local
+#  portainer_data:
