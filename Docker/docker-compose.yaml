@@ -66,9 +66,12 @@ services:
     image: "iptv-service"
     build:
       context: "https://raw.githubusercontent.com/Losenmann/scripts/master/Docker/Dockerfiles/iptv-service.dockerfile"
+        - JTV2XMLTV_URL=${ENV_IPTV_JTV2XMLTV_URL:-https://example.tv/tv.zip}
+        - JTV2XMLTV_CRON=${ENV_IPTV_JTV2XMLTV_CRON:-* 10 * * 1}
     network_mode: host
     expose:
       - 4022
+      - 4023
     tty: true
     restart: always
 
