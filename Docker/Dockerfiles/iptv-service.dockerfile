@@ -19,7 +19,7 @@ RUN apk add \
     && mkdir -p /opt/iptv-svc/src \
     && mkdir -p /opt/iptv-svc/jtv2xmltv \
     && mkdir -p /www/jtv2xmltv \
-    && chown -r minihttpd /www \
+    && chown -R minihttpd /www \
     && /opt/iptv-svc/src \
     && git clone https://github.com/pcherenkov/udpxy.git \
         && cd "$(basename "$_" .git)" \
