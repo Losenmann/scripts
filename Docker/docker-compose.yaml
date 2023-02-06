@@ -60,7 +60,7 @@ services:
       start_period: 80s
     tty: true
     restart: always
-
+    
   iptv-service:
     container_name: "IPTV-Service"
     image: "iptv-service"
@@ -73,6 +73,9 @@ services:
     expose:
       - 4022
       - 4023
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
     tty: true
     restart: always
 
