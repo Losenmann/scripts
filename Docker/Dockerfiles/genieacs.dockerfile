@@ -1,7 +1,7 @@
 FROM alpine:latest
 
-RUN printf "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main" >> /etc/apk/repositories \
-    && printf "http://dl-cdn.alpinelinux.org/alpine/latest-stable/community" >> /etc/apk/repositories \
+RUN printf "http://dl-cdn.alpinelinux.org/alpine/latest-stable/main\n" >> /etc/apk/repositories \
+    && printf "http://dl-cdn.alpinelinux.org/alpine/latest-stable/community\n" >> /etc/apk/repositories \
     && apk update \
     && apk add \
         --update \
