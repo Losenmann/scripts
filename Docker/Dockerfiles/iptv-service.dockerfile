@@ -26,7 +26,7 @@ RUN apk add \
         && make \
         && make install \
         && cd ../.. \
-    && git clone https://github.com/tataranovich/jtv2xmltv.git \
+    && git clone --branch v0.2.1 https://github.com/tataranovich/jtv2xmltv.git \
         && cd ./jtv2xmltv \
         && python3 setup.py install \
         && cd .. \
@@ -35,7 +35,7 @@ RUN apk add \
     && printf "%s /opt/iptv-svc/xmltv-build\n" "${JTV2XMLTV_CRON}" >> /var/spool/cron/crontabs/root \
     && cd /opt/iptv-svc \
     && wget "https://raw.githubusercontent.com/XMLTV/xmltv/master/xmltv.dtd" -O xmltv.dtd \
-    && printf "#!/bin/sh\nwget $JTV2XMLTVURL -O /opt/iptv-svc/jtv.zip &&jtv2xmltv -i /opt/iptv-svc/jtv.zip -o /www/jtv2xmltv/tvguide.xml\ngzip -c /www/jtv2xmltv/tvguide.xml > /www/jtv2xmltv/tvguide.xml.gz\n" > xmltv-build \
+    && printf "#!/bin/sh\nwget $JTV2XMLTVURL -O /opt/iptv-svc/jtv.zip &&jtv2xmltv -i /opt/iptv-svc/jtv.zip -o /www/jtv2xmltv/tvguide.xml\ngzip -k /www/jtv2xmltv/tvguide.xml\n" > xmltv-build \
     && printf "#!/bin/sh\n" > entrypoint.sh \
     && printf "/opt/iptv-svc/xmltv-build\n" >> entrypoint.sh \
     && printf "crond\n" >> entrypoint.sh \
