@@ -2,6 +2,7 @@ FROM alpine:latest
 
 ARG JTV2XMLTV_URL
 ARG JTV2XMLTV_CRON
+ARG JTV2XMLTV_VERSION
 
 ENV JTV2XMLTVURL=${JTV2XMLTV_URL}
 
@@ -21,12 +22,12 @@ RUN apk add \
     && mkdir -p /www/jtv2xmltv \
     && chown -R minihttpd /www \
     && cd /opt/iptv-svc/src \
-    && git clone https://github.com/pcherenkov/udpxy.git \
+    && git clone --branch master https://github.com/pcherenkov/udpxy.git \
         && cd ./udpxy/chipmunk \
         && make \
         && make install \
         && cd ../.. \
-    && git clone --branch v0.2.1 https://github.com/tataranovich/jtv2xmltv.git \
+    && git clone --branch ${JTV2XMLTV_URL} https://github.com/tataranovich/jtv2xmltv.git \
         && cd ./jtv2xmltv \
         && python3 setup.py install \
         && cd .. \
