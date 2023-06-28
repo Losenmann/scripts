@@ -1,1 +1,1 @@
-{"water_cold":[{"id":1,"value":11,"step":10}],"water_hot":[{"id":2,"value":22,"step":10}],"electricity":[{"id":3,"value":33,"step":3200}],"gas":[{"id":4,"value":44,"step":10}]}
+{"water_cold":[{"id":1,"value":11,"measure":"m³","step":10}],"water_hot":[{"id":2,"value":22,"measure":"m³","step":10}],"electricity":[{"id":3,"value":33,"measure":"kW•h","step":3200}],"gas":[{"id":4,"value":44,"measure":"m³","step":10}]}
